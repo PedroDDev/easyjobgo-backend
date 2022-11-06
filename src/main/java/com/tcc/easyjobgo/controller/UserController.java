@@ -70,7 +70,7 @@ public class UserController {
             String token = UUID.randomUUID().toString();
             confirmationToken = new com.tcc.easyjobgo.model.Token(token, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusMinutes(15)), savedUser.getId());
 
-            String link = "http://localhost:8080/easyjobgo/v1/registration/confirm?token=" + token;
+            String link = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/registration/confirm?token=" + token;
             emailSenderService.send(savedUser.getUsername(), "Confirm your email", new BuildEmailMessage().confirmationEmail(savedUser.getFirstName(), link));
 
             tokenRepository.saveToken(confirmationToken);
