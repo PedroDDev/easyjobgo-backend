@@ -21,19 +21,15 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        CustomAuthFilter customAuthFilter = new CustomAuthFilter(authConfig.getAuthenticationManager());
+        CustomAuthenticationFilter customAuthFilter = new CustomAuthenticationFilter(authConfig.getAuthenticationManager());
         customAuthFilter.setFilterProcessesUrl("/easyjobgo/v1/login");
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //http.httpBasic();
         http.authorizeRequests().antMatchers("/easyjobgo/v1/login/**", "/easyjobgo/v1/token/refresh/**").permitAll();
         http.authorizeRequests().antMatchers("/login", "easyjobgo/v1/registration/**", "easyjobgo/v1/user/registration").permitAll();
-        //http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        // http.formLogin().permitAll();
-        // http.logout().permitAll();
         
         return http.build();
     }
