@@ -10,9 +10,9 @@ import com.tcc.easyjobgo.exception.DBException;
 public class DBConfig {
     
     private static String driver = "org.postgresql.Driver";
-    private static String url = "jdbc:postgresql://localhost:5432/postgres";
-    private static String user = "postgres";
-    private static String password = "easyjobgodb";
+    private static String url = "jdbc:postgresql://ec2-35-170-21-76.compute-1.amazonaws.com:5432/d45202g1ck0jku";
+    private static String user = "doniqxvwipslwh";
+    private static String password = "ae3eb5ba6d90ca710beab8a0cc1c0bafa19be58b24860f3295647e6f84f2805d";
 
     public static Connection startConnection(){
         Connection cnn = null;
