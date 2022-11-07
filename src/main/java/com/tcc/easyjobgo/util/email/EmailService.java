@@ -14,13 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService  implements IEmailSender{
 
+    private final String SUPPORT_EMAIL = "easyjobgo.help@gmail.com";
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     
     @Autowired
     private JavaMailSender mailSender;
     
-    private String supportEmail = "easyjobgo.help@gmail.com";
-
     @Override
     @Async
     public void send(String to, String subject, String email) {
@@ -30,7 +29,7 @@ public class EmailService  implements IEmailSender{
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setFrom(supportEmail);
+            helper.setFrom(SUPPORT_EMAIL);
             mailSender.send(mimeMessage);
         } catch (MessagingException m) {
             LOGGER.error("error to send email", m);
