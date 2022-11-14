@@ -27,7 +27,7 @@ public class WebSecurityConfig{
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/easyjobgo/v1/login/**", "/easyjobgo/v1/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers("/login", "easyjobgo/v1/registration/**", "easyjobgo/v1/user/registration").permitAll();
+        http.authorizeRequests().antMatchers("easyjobgo/v1/registration/**", "easyjobgo/v1/user/registration").permitAll();
         http.addFilter(customAuthFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         

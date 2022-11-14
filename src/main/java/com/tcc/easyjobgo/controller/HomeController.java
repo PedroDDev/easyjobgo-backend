@@ -14,6 +14,7 @@ public class HomeController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping(value="/home")
     public String getStart() {
-        return "Bem vindo(a)!";
+        String dir = System.getProperty("user.dir");
+        return dir;
     }
 }
