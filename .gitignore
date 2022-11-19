@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 docker/
+img/
 
 ### STS ###
 .apt_generated
