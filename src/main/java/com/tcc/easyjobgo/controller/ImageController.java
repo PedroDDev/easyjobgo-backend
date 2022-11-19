@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "easyjobgo/v1/image")
 public class ImageController {
 
-    private static final String IMG_PATH = System.getProperty("user.dir")+"\\img\\";
+    private static final String IMG_PATH = System.getProperty("user.dir")+File.separator+"img"+File.separator;
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping(value="/{userCpf}/{fileName}")
