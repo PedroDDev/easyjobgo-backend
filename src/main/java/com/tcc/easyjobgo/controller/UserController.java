@@ -42,7 +42,7 @@ public class UserController {
     IUserRepository userRepository = UserFactory.createUserService();
     ITokenRepository tokenRepository = TokenFactory.createTokenService();
 
-    private static final String IMG_PATH = System.getProperty("user.dir")+"\\img\\";
+    private static final String IMG_PATH = System.getProperty("user.dir")+File.separator+"img"+File.separator;
     private static final String CONFIRMATION_LINK = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/registration/confirm?token=";
 
     @Autowired
