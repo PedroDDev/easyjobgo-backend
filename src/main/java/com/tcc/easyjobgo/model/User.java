@@ -16,6 +16,8 @@ public class User implements UserDetails{
 
     private UUID id;
 
+    private String profileImg;
+
     private String cpf;
 
     private String firstName;
@@ -38,8 +40,10 @@ public class User implements UserDetails{
     private String fedUnit;
 
     private Date registrationDate;
+    private Object ratingValue;
 
     private boolean provideService;
+    private String serviceDesc;
     private Object serviceValue;
 
     private Object serviceCategoryId;
@@ -52,13 +56,14 @@ public class User implements UserDetails{
     public User(){
         
     }
-    public User(UUID id, String cpf, String firstName, String lastName, String username, String password,
+    public User(UUID id, String profileImg, String cpf, String firstName, String lastName, String username, String password,
                 String numberDDD, String number, Date birthdate, String cep, String addressDistrict,
-                String addressPubPlace, Object addressComp, String city, String fedUnit, Date registrationDate,
-                boolean provideService, Object serviceValue, Object serviceCategoryId, 
+                String addressPubPlace, Object addressComp, String city, String fedUnit, Date registrationDate, Object ratingValue,
+                boolean provideService, String serviceDesc, Object serviceValue, Object serviceCategoryId, 
                 Object subserviceCategoryId, Integer statusId, Integer roleId){
         
         this.id = id;
+        this.profileImg = profileImg;
         this.cpf = cpf;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -74,7 +79,9 @@ public class User implements UserDetails{
         this.city = city;
         this.fedUnit = fedUnit;
         this.registrationDate = registrationDate;
+        this.ratingValue = ratingValue;
         this.provideService = provideService;
+        this.serviceDesc = serviceDesc;
         this.serviceValue = serviceValue;
         this.serviceCategoryId = serviceCategoryId;
         this.subserviceCategoryId = subserviceCategoryId;
@@ -84,6 +91,13 @@ public class User implements UserDetails{
 
     public UUID getId(){
         return id;
+    }
+
+    public String getProfileImg(){
+        return profileImg;
+    }
+    public void setProfileImg(String profileImg){
+        this.profileImg = profileImg;
     }
 
     public String getCpf(){
@@ -177,6 +191,13 @@ public class User implements UserDetails{
         this.registrationDate = registrationDate;
     }
     
+    public Object getRatingValue(){
+        return ratingValue;
+    }
+    public void setRatingValue(Object ratingValue){
+        this.ratingValue = ratingValue;
+    }
+
     public boolean isProvideService(){
         return provideService;
     }
@@ -184,6 +205,13 @@ public class User implements UserDetails{
         this.provideService = provideService;
     }
     
+    public String getServiceDesc(){
+        return serviceDesc;
+    }
+    public void setServiceDesc(String serviceDesc){
+        this.serviceDesc = serviceDesc;
+    }
+
     public Object getServiceValue(){
         return serviceValue;
     }
