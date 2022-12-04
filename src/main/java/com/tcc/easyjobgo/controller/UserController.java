@@ -3,25 +3,30 @@ package com.tcc.easyjobgo.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcc.easyjobgo.factory.TokenFactory;
 import com.tcc.easyjobgo.factory.UserFactory;
+import com.tcc.easyjobgo.factory.WorkerDayFactory;
 import com.tcc.easyjobgo.model.User;
+import com.tcc.easyjobgo.model.WorkerDay;
 import com.tcc.easyjobgo.repository.ITokenRepository;
 import com.tcc.easyjobgo.repository.IUserRepository;
+import com.tcc.easyjobgo.repository.IWorkerDayRepository;
 import com.tcc.easyjobgo.util.email.BuildEmailMessage;
 import com.tcc.easyjobgo.util.email.EmailService;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +46,17 @@ public class UserController {
     
     IUserRepository userRepository = UserFactory.createUserService();
     ITokenRepository tokenRepository = TokenFactory.createTokenService();
+    IWorkerDayRepository workerDayRepository = WorkerDayFactory.createWorkerDayService();
 
     private static final String IMG_PATH = System.getProperty("user.dir")+File.separator+"img"+File.separator;
     private static final String CONFIRMATION_LINK = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/registration/confirm?token=";
+    private static final String IMAGE_BASE_URL = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/file/read?file=";
+
+    @Autowired
+    AmazonS3 s3Client;
+
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
 
     @Autowired
     EmailService emailSenderService;
@@ -65,7 +78,7 @@ public class UserController {
     }
 
     @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("file") MultipartFile profileImg){
+    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days, @RequestParam("file") MultipartFile profileImg){
 
         com.tcc.easyjobgo.model.Token confirmationToken = null;
         User savedUser = null;
@@ -73,25 +86,44 @@ public class UserController {
         try {
             ObjectMapper om = new ObjectMapper();
             User responseUser = om.readValue(user, User.class);
+            List<WorkerDay> responseDays = Arrays.asList(om.readValue(days, WorkerDay[].class));
 
             User usernameExists = userRepository.findByUsername(responseUser.getUsername());
             if(usernameExists != null) return new ResponseEntity<String>("Email já está cadastrado no Sistema!", HttpStatus.CONFLICT);
             
             User cpfExists = userRepository.findByCpf(responseUser.getCpf());
             if(cpfExists != null) return new ResponseEntity<String>("Cpf já está cadastrado no Sistema!", HttpStatus.CONFLICT);
-            
-            String profileImgRoot = IMG_PATH+responseUser.getCpf();
-            File root = new File(profileImgRoot);
-            if(!root.exists()) root.mkdirs();
-            if(!profileImg.isEmpty()){
-                byte[] bytes = profileImg.getBytes();
-                Path filePath = Paths.get(root+File.separator+responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename());
-                Files.write(filePath, bytes);
-                
-                responseUser.setProfileImg(responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename());
-            }
 
+            // String profileImgRoot = IMG_PATH+responseUser.getCpf();
+            // File root = new File(profileImgRoot);
+            // if(!root.exists()) root.mkdirs();
+
+            if(!profileImg.isEmpty()){
+                File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+                FileOutputStream os = new FileOutputStream(requestFile);
+                os.write(profileImg.getBytes());
+                os.close();
+
+                String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+
+                s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
+                
+                requestFile.delete();
+                
+                responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
+            }
+ 
             savedUser = userRepository.saveUser(responseUser);
+
+            if(savedUser.isProvideService()){
+                if(days != null){
+                    for (WorkerDay day : responseDays) {
+                        
+                        day.setWorkerId(savedUser.getId());
+                        workerDayRepository.saveWorkerDay(day);
+                    }
+                }
+            }
 
             String token = UUID.randomUUID().toString();
             confirmationToken = new com.tcc.easyjobgo.model.Token(token, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusMinutes(15)), savedUser.getId());
