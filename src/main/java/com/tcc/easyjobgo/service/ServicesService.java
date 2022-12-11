@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +64,7 @@ public class ServicesService implements IServicesRepository{
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        List<Services> service = null;
+        List<Services> service = new ArrayList<Services>();
 
         try {
             cnn = DBConfig.startConnection();
@@ -74,10 +75,10 @@ public class ServicesService implements IServicesRepository{
             rs = ps.executeQuery();
 
             while(rs.next()){
-                service.add (new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
-                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+                service.add(new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                         rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
             }
 
             return service;
@@ -102,7 +103,7 @@ public class ServicesService implements IServicesRepository{
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        List<Services> service = null;
+        List<Services> service = new ArrayList<Services>();
 
         try {
             cnn = DBConfig.startConnection();
@@ -113,10 +114,10 @@ public class ServicesService implements IServicesRepository{
             rs = ps.executeQuery();
 
             while(rs.next()){
-                service.add (new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
-                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+                service.add(new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                         rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
             }
 
             return service;
