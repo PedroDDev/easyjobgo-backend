@@ -21,14 +21,14 @@ public class ServicesService implements IServicesRepository{
     }
 
     @Override
-    public int count(UUID serviceWorker) {
+    public Integer count(UUID serviceWorker) {
         String query = "SELECT count(id_service_worker) FROM tb_services ts2 WHERE id_service_worker = ? ";
         
         Connection cnn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        int count = 0;
+        Integer count = 0;
 
         try {
             cnn = DBConfig.startConnection();

@@ -53,11 +53,12 @@ public class User implements UserDetails{
 
     private Integer roleId;
 
-    private String desc_subservice_cat;
+    private String subserviceCategoryDesc;
 
     public User(){
         
     }
+    
     public User(UUID id, String profileImg, String cpf, String firstName, String lastName, String username, String password,
                 String numberDDD, String number, Date birthdate, String cep, String addressDistrict,
                 String addressPubPlace, Object addressComp, String city, String fedUnit, Date registrationDate, Object ratingValue,
@@ -89,8 +90,43 @@ public class User implements UserDetails{
         this.subserviceCategoryId = subserviceCategoryId;
         this.statusId = statusId;
         this.roleId = roleId;
-        this.desc_subservice_cat = desc_subservice_cat; 
+        this.subserviceCategoryDesc = desc_subservice_cat; 
     }
+    
+    public User(UUID id, String profileImg, String cpf, String firstName, String lastName, String username, String password,
+                String numberDDD, String number, Date birthdate, String cep, String addressDistrict,
+                String addressPubPlace, Object addressComp, String city, String fedUnit, Date registrationDate, Object ratingValue,
+                boolean provideService, String serviceDesc, Object serviceValue, Object serviceCategoryId, 
+                Object subserviceCategoryId, Integer statusId, Integer roleId){
+
+    this.id = id;
+    this.profileImg = profileImg;
+    this.cpf = cpf;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.password = password;
+    this.numberDDD = numberDDD;
+    this.number = number;
+    this.birthdate = birthdate;
+    this.cep = cep;
+    this.addressDistrict = addressDistrict;
+    this.addressPubPlace = addressPubPlace;
+    this.addressComp = addressComp;
+    this.city = city;
+    this.fedUnit = fedUnit;
+    this.registrationDate = registrationDate;
+    this.ratingValue = ratingValue;
+    this.provideService = provideService;
+    this.serviceDesc = serviceDesc;
+    this.serviceValue = serviceValue;
+    this.serviceCategoryId = serviceCategoryId;
+    this.subserviceCategoryId = subserviceCategoryId;
+    this.statusId = statusId;
+    this.roleId = roleId;
+    this.subserviceCategoryDesc = null; 
+    }
+
 
     public UUID getId(){
         return id;
@@ -250,11 +286,11 @@ public class User implements UserDetails{
         this.roleId = roleId;
     }
 
-    public String getDesc_subservice_cat() {
-        return desc_subservice_cat;
+    public String getSubserviceCategoryDesc() {
+        return subserviceCategoryDesc;
     }
-    public void setDesc_subservice_cat(String desc_subservice_cat) {
-        this.desc_subservice_cat = desc_subservice_cat;
+    public void setSubserviceCategoryDesc(String desc_subservice_cat) {
+        this.subserviceCategoryDesc = desc_subservice_cat;
     }
 
 

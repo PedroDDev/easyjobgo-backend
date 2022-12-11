@@ -12,7 +12,8 @@ public interface IServicesRepository {
     Services findById(UUID id);
     List<Services> findAllByClient(UUID serviceClient);
     List<Services> findAllByWorker(UUID serviceWorker);
-    int count(UUID serviceWorker);
+    
+    Integer count(UUID serviceWorker);
     
     Services findByToken(String token);
 

@@ -70,6 +70,22 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @GetMapping(path="/workers/{username}")
+    public ResponseEntity<List<User>> getAllWorkers(@PathVariable("username") String username) {
+        List<User> result = userRepository.findAllWorkers(username);
+        if(result.size() > 0) return new ResponseEntity<List<User>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @GetMapping(path="/workers/search/{username}/{description}")
+    public ResponseEntity<List<User>> getByDesc(@PathVariable("username") String username, @PathVariable("description") String description) {
+        List<User> result = userRepository.findByDesc(username, description);
+        if(result.size() > 0) return new ResponseEntity<List<User>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping(path="/{username}")
     public ResponseEntity<User> getUser(@PathVariable("username") String username) {
         User result = userRepository.findByUsername(username);
@@ -93,10 +109,6 @@ public class UserController {
             
             User cpfExists = userRepository.findByCpf(responseUser.getCpf());
             if(cpfExists != null) return new ResponseEntity<String>("Cpf já está cadastrado no Sistema!", HttpStatus.CONFLICT);
-
-            // String profileImgRoot = IMG_PATH+responseUser.getCpf();
-            // File root = new File(profileImgRoot);
-            // if(!root.exists()) root.mkdirs();
 
             if(!profileImg.isEmpty()){
                 File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
@@ -142,6 +154,26 @@ public class UserController {
         return new ResponseEntity<String>("Confirmation Token: " + confirmationToken.getToken(), HttpStatus.CREATED);
     }
 
+    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    // @PutMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    // public ResponseEntity<User> updateUser(@RequestParam("user") String user, @RequestParam("days") String days){
+       
+    //     try {
+    //         ObjectMapper om = new ObjectMapper();
+    //         User responseUser = om.readValue(user, User.class);
+    
+    //         User userExists = userRepository.findById(responseUser.getId());
+    //         if(userExists != null) {
+    //             return new ResponseEntity<User>(userRepository.updateUser(responseUser), HttpStatus.OK);
+    //         }
+    //         return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            
+    //     } catch (Exception e) {
+    //         return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    //     }
+        
+    // }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(value="/alteration", consumes = {"application/json"})
     public ResponseEntity<User> updateUser(@RequestBody User user){
@@ -149,6 +181,25 @@ public class UserController {
         if(userExists != null) return new ResponseEntity<User>(userRepository.updateUser(user), HttpStatus.OK);
         return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
+
+    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    // @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    // public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
+    //     User userExists = userRepository.findById(id);
+    //     if(userExists != null && !profileImg.isEmpty()) {
+
+    //         File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+    //         FileOutputStream os = new FileOutputStream(requestFile);
+    //         os.write(profileImg.getBytes());
+    //         os.close();
+
+    //         String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+    //         userRepository.updateUserProfileImage(fileName, id);
+
+    //         return new ResponseEntity<String>("imagem de perfil atualizada", HttpStatus.OK);
+    //     }
+    //     return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+    // }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value="/delete", consumes = {"application/json"})
