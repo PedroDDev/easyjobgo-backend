@@ -10,6 +10,9 @@ public interface IServicesRepository {
     List<Services> findAll();
     List<Services> findAllByUser();
     Services findById(UUID id);
+    List<Services> findAllByClient(UUID serviceClient);
+    List<Services> findAllByWorker(UUID serviceWorker);
+    int count(UUID serviceWorker);
     
     Services findByToken(String token);
 

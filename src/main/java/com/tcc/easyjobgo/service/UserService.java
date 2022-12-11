@@ -18,6 +18,98 @@ import com.tcc.easyjobgo.repository.IUserRepository;
 public class UserService implements IUserRepository{
 
     @Override
+    public List<User> findAll(String username, int id_user_service_cat) {
+        String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
+                               " numberddd_user, number_user, birthdate_user, postal_code_user, address_district_user, " +
+                               " address_pubplace_user, address_comp_user, city_user, fu_user, regdate_user, regdate_user, " +
+                               " rating_user, provservice_user, service_desc_user, service_value_user, id_user_service_cat, " +
+                               " id_user_subservice_cat, id_user_status, id_user_role, desc_subservice_cat FROM tb_user tu " +
+                       " INNER JOIN tb_subservice_cat tsc2 on id_subservice_cat = id_user_subservice_cat " +
+                       " WHERE id_user_role = '2' AND id_user_status = '1' AND email_user <> ? AND id_user_service_cat = ? ";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<User> users = new ArrayList<User>();
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setString(1, username);
+            ps.setInt(2, id_user_service_cat);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                users.add(new User((UUID)rs.getObject(1),rs.getString(2), rs.getString(3), rs.getString(4), 
+                                   rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+                                   rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
+                                   rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
+                                   rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
+                                   rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26)));
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+
+    }
+    
+    @Override
+    public List<User> findByDesc(String username, String desc) {
+        String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
+                                "numberddd_user, number_user, birthdate_user, postal_code_user, address_district_user, " +
+                                " address_pubplace_user, address_comp_user, city_user, fu_user, regdate_user, regdate_user, " +
+                                "rating_user, provservice_user, service_desc_user, service_value_user, id_user_service_cat, " +
+                                "id_user_subservice_cat, id_user_status, id_user_role, desc_subservice_cat FROM tb_user tu " +
+                        "INNER JOIN tb_service_cat tsc ON tsc.id_service_cat = id_user_service_cat" +
+                        "INNER JOIN  tb_subservice_cat tsc2 ON id_subservice_service_cat = tsc.id_service_cat "+
+                        "WHERE id_user_role = '2' AND id_user_status = '1' AND  email_user <> ? "+
+                        "(desc_service_cat ILIKE '%"+desc+"%' OR desc_subservice_cat ILIKE '%"+desc+"%' OR service_desc_user ILIKE '%"+desc+"%')";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<User> users = new ArrayList<User>();
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setString(1, username);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                users.add(new User((UUID)rs.getObject(1),rs.getString(2), rs.getString(3), rs.getString(4), 
+                                   rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+                                   rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
+                                   rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
+                                   rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
+                                   rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26)));
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+
+    }
+
+
+    @Override
     public List<User> findAll() {
         String query = "select ID_USER,PROFILE_IMG_USER,CPF_USER,FIRST_NAME_USER,LAST_NAME_USER,EMAIL_USER,PASSWORD_USER,"+
                        "       NUMBERDDD_USER,NUMBER_USER,BIRTHDATE_USER,POSTAL_CODE_USER,ADDRESS_DISTRICT_USER,"+
@@ -42,7 +134,7 @@ public class UserService implements IUserRepository{
                                    rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                    rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                    rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                   rs.getObject(23), rs.getInt(24), rs.getInt(25)));
+                                   rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26)));
             }
 
             return users;
@@ -63,7 +155,7 @@ public class UserService implements IUserRepository{
                        "       ADDRESS_PUBPLACE_USER,ADDRESS_COMP_USER,CITY_USER,FU_USER,REGDATE_USER,RATING_USER,PROVSERVICE_USER,SERVICE_DESC_USER,"+
                        "       SERVICE_VALUE_USER,ID_USER_SERVICE_CAT,ID_USER_SUBSERVICE_CAT,ID_USER_STATUS,ID_USER_ROLE "+
                        "from TB_USER " +
-                       "WHERE EMAIL_USER=?";
+                       "WHERE EMAIL_USER = ?";
         
         Connection cnn = null;
         PreparedStatement ps = null;
@@ -85,7 +177,7 @@ public class UserService implements IUserRepository{
                                 rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                 rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                 rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                rs.getObject(23), rs.getInt(24), rs.getInt(25));
+                                rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26));
             }
 
             return user;
@@ -127,7 +219,7 @@ public class UserService implements IUserRepository{
                                 rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                 rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                 rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                rs.getObject(23), rs.getInt(24), rs.getInt(25));
+                                rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26));
             }
 
             return user;
@@ -168,7 +260,7 @@ public class UserService implements IUserRepository{
                                 rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                 rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                 rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                rs.getObject(23), rs.getInt(24), rs.getInt(25));
+                                rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26));
             }
 
             return user;
@@ -234,7 +326,7 @@ public class UserService implements IUserRepository{
                                     rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                     rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                     rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                    rs.getObject(23), rs.getInt(24), rs.getInt(25));
+                                    rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26));
                 }
             }
 
@@ -295,7 +387,7 @@ public class UserService implements IUserRepository{
                                     rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
                                     rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
                                     rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
-                                    rs.getObject(23), rs.getInt(24), rs.getInt(25));
+                                    rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26));
                 }
             }
             

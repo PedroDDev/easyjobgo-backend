@@ -53,6 +53,8 @@ public class User implements UserDetails{
 
     private Integer roleId;
 
+    private String desc_subservice_cat;
+
     public User(){
         
     }
@@ -60,7 +62,7 @@ public class User implements UserDetails{
                 String numberDDD, String number, Date birthdate, String cep, String addressDistrict,
                 String addressPubPlace, Object addressComp, String city, String fedUnit, Date registrationDate, Object ratingValue,
                 boolean provideService, String serviceDesc, Object serviceValue, Object serviceCategoryId, 
-                Object subserviceCategoryId, Integer statusId, Integer roleId){
+                Object subserviceCategoryId, Integer statusId, Integer roleId, String desc_subservice_cat){
         
         this.id = id;
         this.profileImg = profileImg;
@@ -87,6 +89,7 @@ public class User implements UserDetails{
         this.subserviceCategoryId = subserviceCategoryId;
         this.statusId = statusId;
         this.roleId = roleId;
+        this.desc_subservice_cat = desc_subservice_cat; 
     }
 
     public UUID getId(){
@@ -246,6 +249,14 @@ public class User implements UserDetails{
     public void setRoleId(Integer roleId){
         this.roleId = roleId;
     }
+
+    public String getDesc_subservice_cat() {
+        return desc_subservice_cat;
+    }
+    public void setDesc_subservice_cat(String desc_subservice_cat) {
+        this.desc_subservice_cat = desc_subservice_cat;
+    }
+
 
     @Override
     public String getUsername() {

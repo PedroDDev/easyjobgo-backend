@@ -11,9 +11,13 @@ import com.tcc.easyjobgo.model.User;
 public interface IUserRepository {
  
     List<User> findAll();
+    List<User> findAll(String username, int id_user_service_cat);
     User findByUsername(String username);
     User findByCpf(String cpf);
     User findById(UUID id);
+
+    List<User> findByDesc(String username, String desc);
+
 
     User saveUser(User user);
 

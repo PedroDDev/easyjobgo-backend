@@ -20,8 +20,114 @@ public class ServicesService implements IServicesRepository{
     }
 
     @Override
-    public List<Services> findAllByUser() {
-        return null;
+    public int count(UUID serviceWorker) {
+        String query = "SELECT count(id_service_worker) FROM tb_services ts2 WHERE id_service_worker = ? ";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        int count = 0;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setObject(1, serviceWorker);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                count = rs.getInt(1);
+            }
+
+            return count;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+    }
+
+    @Override
+    public List<Services> findAllByClient(UUID serviceClient) {
+        String query = "SELECT ID_SERVICE, INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE," +
+                               "EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE," +
+                               "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER" +
+                        " FROM tb_services ts2 WHERE id_service_client = ? ";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<Services> service = null;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setObject(1, serviceClient);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                service.add (new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+            }
+
+            return service;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+    }
+
+    @Override
+    public List<Services> findAllByWorker(UUID serviceWorker) {
+        String query = "SELECT ID_SERVICE,INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE," +
+                                "EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE,START_DATE_SERVICE, END_DATE_SERVICE," +
+                                "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER" +
+                       "FROM tb_services ts2 WHERE id_service_worker = ? ";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<Services> service = null;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setObject(1, serviceWorker);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                service.add (new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+            }
+
+            return service;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
     }
 
     @Override
@@ -132,6 +238,11 @@ public class ServicesService implements IServicesRepository{
 
     @Override
     public String delete(UUID id) {
+        return null;
+    }
+
+    @Override
+    public List<Services> findAllByUser() {
         return null;
     }
 }
