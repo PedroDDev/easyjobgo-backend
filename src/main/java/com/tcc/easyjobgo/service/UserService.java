@@ -361,26 +361,22 @@ public class UserService implements IUserRepository{
         try {
             cnn = DBConfig.startConnection();
             ps = cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
-            String passwordEncode = new BCryptPasswordEncoder().encode(user.getPassword());
             
-            ps.setString(1, user.getProfileImg());
-            ps.setString(2, passwordEncode);
-            ps.setString(3, user.getNumberDDD());
-            ps.setString(4, user.getNumber());
-            ps.setString(5, user.getCep());
-            ps.setString(6, user.getAddressDistrict());
-            ps.setString(7, user.getAddressPubPlace());
-            ps.setObject(8, user.getAddressComp());
-            ps.setString(9, user.getCity());
-            ps.setString(10, user.getFedUnit());
-            ps.setBoolean(11, user.isProvideService());
-            ps.setString(12, user.getServiceDesc());
-            ps.setObject(13, user.getServiceValue());
-            ps.setObject(14, user.getServiceCategoryId());
-            ps.setObject(15, user.getSubserviceCategoryId());
+            ps.setString(1, user.getNumberDDD());
+            ps.setString(2, user.getNumber());
+            ps.setString(3, user.getCep());
+            ps.setString(4, user.getAddressDistrict());
+            ps.setString(5, user.getAddressPubPlace());
+            ps.setObject(6, user.getAddressComp());
+            ps.setString(7, user.getCity());
+            ps.setString(8, user.getFedUnit());
+            ps.setBoolean(9, user.isProvideService());
+            ps.setString(10, user.getServiceDesc());
+            ps.setObject(11, user.getServiceValue());
+            ps.setObject(12, user.getServiceCategoryId());
+            ps.setObject(13, user.getSubserviceCategoryId());
 
-            ps.setObject(16, user.getId());
+            ps.setObject(14, user.getId());
 
             int affectedRows = ps.executeUpdate();
 
