@@ -11,7 +11,9 @@ public interface IWorkerDayRepository {
     WorkerDay findById(Integer id);
     List<WorkerDay> findByWorkerId(UUID id);
 
-    WorkerDay saveWorkerDay(WorkerDay user);
+    WorkerDay save(WorkerDay workerDay);
 
-    String deleteWorkerDay(Integer id);
+    void updateStatus(Integer id, Integer status);
+
+    String delete(Integer id);
 }

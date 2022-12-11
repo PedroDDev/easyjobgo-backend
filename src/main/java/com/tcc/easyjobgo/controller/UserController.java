@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days){
+    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days, @RequestParam("file") MultipartFile profileImg){
 
         com.tcc.easyjobgo.model.Token confirmationToken = null;
         User savedUser = null;
@@ -98,20 +98,20 @@ public class UserController {
             // File root = new File(profileImgRoot);
             // if(!root.exists()) root.mkdirs();
 
-            // if(!profileImg.isEmpty()){
-            //     File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
-            //     FileOutputStream os = new FileOutputStream(requestFile);
-            //     os.write(profileImg.getBytes());
-            //     os.close();
+            if(!profileImg.isEmpty()){
+                File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+                FileOutputStream os = new FileOutputStream(requestFile);
+                os.write(profileImg.getBytes());
+                os.close();
 
-            //     String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+                String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
 
-            //     s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
+                s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
                 
-            //     requestFile.delete();
+                requestFile.delete();
                 
-            //     responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
-            // }
+                responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
+            }
  
             savedUser = userRepository.saveUser(responseUser);
 
@@ -120,7 +120,7 @@ public class UserController {
                     for (WorkerDay day : responseDays) {
                         
                         day.setWorkerId(savedUser.getId());
-                        workerDayRepository.saveWorkerDay(day);
+                        workerDayRepository.save(day);
                     }
                 }
             }

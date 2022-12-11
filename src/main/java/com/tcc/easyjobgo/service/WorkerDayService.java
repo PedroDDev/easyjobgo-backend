@@ -17,7 +17,7 @@ public class WorkerDayService implements IWorkerDayRepository {
 
     @Override
     public List<WorkerDay> findAll() {
-        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY "+
+        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY,ID_STATUS_DAY "+
                        "from TB_WORKER_DAY " + 
                        "order by ID_WORKER_DAY";
 
@@ -33,7 +33,7 @@ public class WorkerDayService implements IWorkerDayRepository {
         rs = ps.executeQuery();
 
         while(rs.next()){
-            workersDays.add(new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3)));
+            workersDays.add(new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return workersDays;
@@ -49,7 +49,7 @@ public class WorkerDayService implements IWorkerDayRepository {
 
     @Override
     public WorkerDay findById(Integer id) {
-        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY "+
+        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY,ID_STATUS_DAY "+
                        "from TB_WORKER_DAY " +
                        "where ID_WORKER_DAY=? " +
                        "order by ID_WORKER_DAY";
@@ -69,7 +69,7 @@ public class WorkerDayService implements IWorkerDayRepository {
         rs = ps.executeQuery();
 
         while(rs.next()){
-            workerDay = new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3));
+            workerDay = new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3), rs.getInt(4));
         }
 
         return workerDay;
@@ -85,7 +85,7 @@ public class WorkerDayService implements IWorkerDayRepository {
 
     @Override
     public List<WorkerDay> findByWorkerId(UUID id) {
-        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY "+
+        String query = "select ID_WORKER_DAY,ID_WORKER,ID_DAY,ID_STATUS_DAY "+
                        "from TB_WORKER_DAY " +
                        "where ID_WORKER=? " +
                        "order by ID_WORKER_DAY";
@@ -105,7 +105,7 @@ public class WorkerDayService implements IWorkerDayRepository {
         rs = ps.executeQuery();
 
         while(rs.next()){
-            workerDays.add(new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3)));
+            workerDays.add(new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3), rs.getInt(4)));
         }
 
         return workerDays;
@@ -120,7 +120,7 @@ public class WorkerDayService implements IWorkerDayRepository {
     }
 
     @Override
-    public WorkerDay saveWorkerDay(WorkerDay user) {
+    public WorkerDay save(WorkerDay user) {
         String query = "insert into TB_WORKER_DAY (ID_WORKER,ID_DAY) " + 
                        "values (?,?)";
         
@@ -141,7 +141,7 @@ public class WorkerDayService implements IWorkerDayRepository {
                 rs = ps.getGeneratedKeys();
                 
                 if(rs.next()){
-                    return new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3));
+                    return new WorkerDay(rs.getInt(1), (UUID)rs.getObject(2), rs.getInt(3), rs.getInt(4));
                 }
             }
 
@@ -157,7 +157,34 @@ public class WorkerDayService implements IWorkerDayRepository {
     }
 
     @Override
-    public String deleteWorkerDay(Integer id) {
+    public void updateStatus(Integer id, Integer status) {
+        String query = "update TB_WORKER_DAY set ID_STATUS_DAY=? " +
+                       "where ID_WORKER_DAY=?";
+
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            
+            ps.setInt(1, status);
+            ps.setInt(2, id);
+            
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        }finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }        
+    }
+
+    @Override
+    public String delete(Integer id) {
         return null;
     }
     

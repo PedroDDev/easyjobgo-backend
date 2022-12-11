@@ -3,34 +3,38 @@ package com.tcc.easyjobgo.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-public class Service {
+public class Services {
     
     private UUID id;
     private Timestamp initalHour;
     private Timestamp finalHour;
+    private String description;
     private Object value;
     private Timestamp createDate;
     private Timestamp expiresDate;
     private boolean confirmationClient;
     private boolean confirmationWorker;
+    private Timestamp startDate;
     private Timestamp endDate;
-    private Timestamp endToken;
+    private String endToken;
     private boolean endConfirmationClient;
     private boolean endConfirmationWorker;
     private Integer dayServiceWorker;
     private UUID serviceClient;
     private UUID serviceWorker;
     
-    public Service(){
+    public Services(){
         
     }
-    public Service(UUID id, Timestamp initalHour, Timestamp finalHour, Object value, Timestamp createDate,
-            Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp endDate,
-            Timestamp endToken, boolean endConfirmationClient, boolean endConfirmationWorker, Integer dayServiceWorker,
+    public Services(UUID id, Timestamp initalHour, Timestamp finalHour, String description, Object value, Timestamp createDate,
+            Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, Timestamp endDate,
+            String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, Integer dayServiceWorker,
             UUID serviceClient, UUID serviceWorker) {
+        
         this.id = id;
         this.initalHour = initalHour;
         this.finalHour = finalHour;
+        this.description = description;
         this.value = value;
         this.createDate = createDate;
         this.expiresDate = expiresDate;
@@ -63,6 +67,13 @@ public class Service {
         this.finalHour = finalHour;
     }
     
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Object getValue() {
         return value;
     }
@@ -98,6 +109,13 @@ public class Service {
         this.confirmationWorker = confirmationWorker;
     }
     
+    public Timestamp getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Timestamp startDate) {
+        this.startDate = startDate;
+    }
+ 
     public Timestamp getEndDate() {
         return endDate;
     }
@@ -105,10 +123,10 @@ public class Service {
         this.endDate = endDate;
     }
     
-    public Timestamp getEndToken() {
+    public String getEndToken() {
         return endToken;
     }
-    public void setEndToken(Timestamp endToken) {
+    public void setEndToken(String endToken) {
         this.endToken = endToken;
     }
     

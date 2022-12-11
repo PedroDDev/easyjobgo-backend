@@ -3,17 +3,19 @@ package com.tcc.easyjobgo.repository;
 import java.util.List;
 import java.util.UUID;
 
-import com.tcc.easyjobgo.model.Service;
+import com.tcc.easyjobgo.model.Services;
 
 public interface IServicesRepository {
     
-    List<Service> findAll();
-    List<Service> findAllByUser();
-    Service findById(UUID id);
+    List<Services> findAll();
+    List<Services> findAllByUser();
+    Services findById(UUID id);
+    
+    Services findByToken(String token);
 
-    Service updateUser(Service service);
+    Services update(Services service);
 
-    Service saveWorkerDay(Service service);
+    Services save(Services service);
 
-    String deleteWorkerDay(UUID id);
+    String delete(UUID id);
 }

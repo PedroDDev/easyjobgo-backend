@@ -1,41 +1,137 @@
 package com.tcc.easyjobgo.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 
-import com.tcc.easyjobgo.model.Service;
+import com.tcc.easyjobgo.config.database.DBConfig;
+import com.tcc.easyjobgo.exception.DBException;
+import com.tcc.easyjobgo.model.Services;
 import com.tcc.easyjobgo.repository.IServicesRepository;
 
 public class ServicesService implements IServicesRepository{
 
     @Override
-    public List<Service> findAll() {
+    public List<Services> findAll() {
         return null;
     }
 
     @Override
-    public List<Service> findAllByUser() {
+    public List<Services> findAllByUser() {
         return null;
     }
 
     @Override
-    public Service findById(UUID id) {
+    public Services findById(UUID id) {
         return null;
     }
 
     @Override
-    public Service updateUser(Service service) {
+    public Services findByToken(String token) {
+        String query = "select ID_SERVICE,INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE," +
+                       "EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE,START_DATE_SERVICE, END_DATE_SERVICE," +
+                       "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER"+
+                       "from TB_SERVICES WHERE END_TOKEN_SERVICE=?";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        Services service = null;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setObject(1, token);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                service = new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1));
+            }
+
+            return service;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+    }
+
+    @Override
+    public Services update(Services service) {
         return null;
     }
 
     @Override
-    public Service saveWorkerDay(Service service) {
+    public Services save(Services service) {
+        String query = "insert into TB_SERVICES (INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE,EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE," +
+                       "CONFIRMATION_WORKER_SERVICE,START_DATE_SERVICE,END_DATE_SERVICE,END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE," +
+                       "ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER) " + 
+                       "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            
+            ps.setTimestamp(1, service.getInitalHour());
+            ps.setTimestamp(2, service.getFinalHour());
+            ps.setString(3, service.getDescription());
+            ps.setObject(4, service.getValue());
+            ps.setTimestamp(5, service.getCreateDate());
+            ps.setTimestamp(6, service.getExpiresDate());
+            ps.setBoolean(7, service.isConfirmationClient());
+            ps.setBoolean(8, service.isConfirmationWorker());
+            ps.setTimestamp(9, service.getStartDate());
+            ps.setTimestamp(10, service.getEndDate());
+            ps.setString(11, service.getEndToken());
+            ps.setBoolean(12, service.isEndConfirmationClient());
+            ps.setBoolean(13, service.isEndConfirmationWorker());
+            ps.setInt(14, service.getDayServiceWorker());
+            ps.setObject(15, service.getServiceClient());
+            ps.setObject(16, service.getServiceWorker());
+
+
+            int affectedRows = ps.executeUpdate();
+
+            if(affectedRows > 0){
+                rs = ps.getGeneratedKeys();
+                
+                if(rs.next()){
+                    return new Services((UUID)rs.getObject(1), rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getObject(1),
+                                       rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
+                                       rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
+                                       rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1));
+                }
+            }
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        }finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+        
         return null;
     }
 
     @Override
-    public String deleteWorkerDay(UUID id) {
+    public String delete(UUID id) {
         return null;
     }
-    
 }
