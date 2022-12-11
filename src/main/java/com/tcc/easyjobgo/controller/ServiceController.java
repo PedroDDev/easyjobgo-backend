@@ -28,7 +28,7 @@ import com.tcc.easyjobgo.util.email.BuildEmailMessage;
 import com.tcc.easyjobgo.util.email.EmailService;
 
 @RestController
-@RequestMapping(path = "easyjobgo/v1/service")
+@RequestMapping(path = "easyjobgo/v1/services")
 public class ServiceController {
 
     IServicesRepository serviceRepository = ServiceFactory.createServicesService();
@@ -124,7 +124,7 @@ public class ServiceController {
     }
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/start", consumes = {"application/json"})
+    @PutMapping(value="/end", consumes = {"application/json"})
     public ResponseEntity<String> workerEndService(@RequestBody Services service){
 
         User client = null;
@@ -152,7 +152,7 @@ public class ServiceController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/start", consumes = {"application/json"})
+    @PutMapping(value="/endconfirmation", consumes = {"application/json"})
     public ResponseEntity<String> clientEndConfirmationService(@RequestBody Services service){
 
         Services savedService = null;
@@ -174,7 +174,7 @@ public class ServiceController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(value="/start", consumes = {"application/json"})
+    @GetMapping(value="/finish", consumes = {"application/json"})
     public ResponseEntity<String> finishService(@RequestParam String token){
 
         try {
