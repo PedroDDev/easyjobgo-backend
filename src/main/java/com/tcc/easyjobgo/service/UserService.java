@@ -283,10 +283,10 @@ public class UserService implements IUserRepository{
     @Override
     public User saveUser(User user) {
         
-        String query = "insert into TB_USER (PROFILE_IMG_USER,CPF_USER,FIRST_NAME_USER,LAST_NAME_USER,EMAIL_USER,PASSWORD_USER,NUMBERDDD_USER,NUMBER_USER,BIRTHDATE_USER," +
+        String query = "insert into TB_USER (CPF_USER,FIRST_NAME_USER,LAST_NAME_USER,EMAIL_USER,PASSWORD_USER,NUMBERDDD_USER,NUMBER_USER,BIRTHDATE_USER," +
                        "                     POSTAL_CODE_USER,ADDRESS_DISTRICT_USER,ADDRESS_PUBPLACE_USER,ADDRESS_COMP_USER,CITY_USER,FU_USER,PROVSERVICE_USER,SERVICE_DESC_USER," +
                        "                     SERVICE_VALUE_USER,ID_USER_SERVICE_CAT,ID_USER_SUBSERVICE_CAT,ID_USER_STATUS,ID_USER_ROLE) " + 
-                       "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                       "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         Connection cnn = null;
         PreparedStatement ps = null;
@@ -298,28 +298,27 @@ public class UserService implements IUserRepository{
             
             String passwordEncode = new BCryptPasswordEncoder().encode(user.getPassword());
 
-            ps.setString(1, user.getProfileImg());
-            ps.setString(2, user.getCpf());
-            ps.setString(3, user.getFirstName());
-            ps.setString(4, user.getLastName());
-            ps.setString(5, user.getUsername());
-            ps.setString(6, passwordEncode);
-            ps.setString(7, user.getNumberDDD());
-            ps.setString(8, user.getNumber());
-            ps.setDate(9, user.getBirthdate());
-            ps.setString(10, user.getCep());
-            ps.setString(11, user.getAddressDistrict());
-            ps.setString(12, user.getAddressPubPlace());
-            ps.setObject(13, user.getAddressComp());
-            ps.setString(14, user.getCity());
-            ps.setString(15, user.getFedUnit());
-            ps.setBoolean(16, user.isProvideService());
-            ps.setString(17, user.getServiceDesc());
-            ps.setObject(18, user.getServiceValue());
-            ps.setObject(19, user.getServiceCategoryId());
-            ps.setObject(20, user.getSubserviceCategoryId());
-            ps.setInt(21, user.getStatusId());
-            ps.setInt(22, user.getRoleId());
+            ps.setString(1, user.getCpf());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setString(4, user.getUsername());
+            ps.setString(5, passwordEncode);
+            ps.setString(6, user.getNumberDDD());
+            ps.setString(7, user.getNumber());
+            ps.setDate(8, user.getBirthdate());
+            ps.setString(9, user.getCep());
+            ps.setString(10, user.getAddressDistrict());
+            ps.setString(11, user.getAddressPubPlace());
+            ps.setObject(12, user.getAddressComp());
+            ps.setString(13, user.getCity());
+            ps.setString(14, user.getFedUnit());
+            ps.setBoolean(15, user.isProvideService());
+            ps.setString(16, user.getServiceDesc());
+            ps.setObject(17, user.getServiceValue());
+            ps.setObject(18, user.getServiceCategoryId());
+            ps.setObject(19, user.getSubserviceCategoryId());
+            ps.setInt(20, user.getStatusId());
+            ps.setInt(21, user.getRoleId());
 
             int affectedRows = ps.executeUpdate();
 

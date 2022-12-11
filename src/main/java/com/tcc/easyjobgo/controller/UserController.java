@@ -94,7 +94,7 @@ public class UserController {
     }
 
     @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days, @RequestParam("file") MultipartFile profileImg){
+    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days){
 
         com.tcc.easyjobgo.model.Token confirmationToken = null;
         User savedUser = null;
@@ -110,20 +110,20 @@ public class UserController {
             User cpfExists = userRepository.findByCpf(responseUser.getCpf());
             if(cpfExists != null) return new ResponseEntity<String>("Cpf já está cadastrado no Sistema!", HttpStatus.CONFLICT);
 
-            if(!profileImg.isEmpty()){
-                File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
-                FileOutputStream os = new FileOutputStream(requestFile);
-                os.write(profileImg.getBytes());
-                os.close();
+            // if(!profileImg.isEmpty()){
+            //     File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+            //     FileOutputStream os = new FileOutputStream(requestFile);
+            //     os.write(profileImg.getBytes());
+            //     os.close();
 
-                String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+            //     String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
 
-                s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
+            //     s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
                 
-                requestFile.delete();
+            //     requestFile.delete();
                 
-                responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
-            }
+            //     responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
+            // }
  
             savedUser = userRepository.saveUser(responseUser);
 
@@ -154,26 +154,6 @@ public class UserController {
         return new ResponseEntity<String>("Confirmation Token: " + confirmationToken.getToken(), HttpStatus.CREATED);
     }
 
-    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    // @PutMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    // public ResponseEntity<User> updateUser(@RequestParam("user") String user, @RequestParam("days") String days){
-       
-    //     try {
-    //         ObjectMapper om = new ObjectMapper();
-    //         User responseUser = om.readValue(user, User.class);
-    
-    //         User userExists = userRepository.findById(responseUser.getId());
-    //         if(userExists != null) {
-    //             return new ResponseEntity<User>(userRepository.updateUser(responseUser), HttpStatus.OK);
-    //         }
-    //         return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-            
-    //     } catch (Exception e) {
-    //         return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-    //     }
-        
-    // }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PutMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<User> updateUser(@RequestParam("user") String user){
@@ -185,28 +165,33 @@ public class UserController {
             if(userExists != null) return new ResponseEntity<User>(userRepository.updateUser(responseUser), HttpStatus.OK);
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    // @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    // public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
-    //     User userExists = userRepository.findById(id);
-    //     if(userExists != null && !profileImg.isEmpty()) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
+        try {
+            User userExists = userRepository.findById(id);
+        
+            if(userExists != null && !profileImg.isEmpty()) {
 
-    //         File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
-    //         FileOutputStream os = new FileOutputStream(requestFile);
-    //         os.write(profileImg.getBytes());
-    //         os.close();
+                File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+                FileOutputStream os = new FileOutputStream(requestFile);
+                os.write(profileImg.getBytes());
+                os.close();
 
-    //         String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
-    //         userRepository.updateUserProfileImage(fileName, id);
+                String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+                userRepository.updateUserProfileImage(fileName, id);
 
-    //         return new ResponseEntity<String>("imagem de perfil atualizada", HttpStatus.OK);
-    //     }
-    //     return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-    // }
+                return new ResponseEntity<String>("imagem de perfil atualizada", HttpStatus.OK);
+            }
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value="/delete", consumes = {"application/json"})
