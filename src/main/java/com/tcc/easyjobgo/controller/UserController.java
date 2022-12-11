@@ -175,11 +175,18 @@ public class UserController {
     // }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/alteration", consumes = {"application/json"})
-    public ResponseEntity<User> updateUser(@RequestBody User user){
-        User userExists = userRepository.findById(user.getId());
-        if(userExists != null) return new ResponseEntity<User>(userRepository.updateUser(user), HttpStatus.OK);
-        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    @PutMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<User> updateUser(@RequestParam("user") String user){
+        try {
+            ObjectMapper om = new ObjectMapper();
+            User responseUser = om.readValue(user, User.class);
+        
+            User userExists = userRepository.findById(responseUser.getId());
+            if(userExists != null) return new ResponseEntity<User>(userRepository.updateUser(responseUser), HttpStatus.OK);
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
