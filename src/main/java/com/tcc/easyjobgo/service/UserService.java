@@ -110,12 +110,12 @@ public class UserService implements IUserRepository{
 
     @Override
     public List<User> findAll() {
-        String query = "select ID_USER,PROFILE_IMG_USER,CPF_USER,FIRST_NAME_USER,LAST_NAME_USER,EMAIL_USER,PASSWORD_USER,"+
-                       "       NUMBERDDD_USER,NUMBER_USER,BIRTHDATE_USER,POSTAL_CODE_USER,ADDRESS_DISTRICT_USER,"+
-                       "       ADDRESS_PUBPLACE_USER,ADDRESS_COMP_USER,CITY_USER,FU_USER,REGDATE_USER,RATING_USER,PROVSERVICE_USER,SERVICE_DESC_USER,"+
-                       "       SERVICE_VALUE_USER,ID_USER_SERVICE_CAT,ID_USER_SUBSERVICE_CAT,ID_USER_STATUS,ID_USER_ROLE "+
-                       "from TB_USER " + 
-                       "order by FIRST_NAME_USER";
+        String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
+                       " numberddd_user, number_user, birthdate_user, postal_code_user, address_district_user, " +
+                       " address_pubplace_user, address_comp_user, city_user, fu_user, regdate_user, " +
+                       " rating_user, provservice_user, service_desc_user, service_value_user, id_user_service_cat, " +
+                       " id_user_subservice_cat, id_user_status, id_user_role, desc_subservice_cat FROM tb_user tu " +
+                       " LEFT JOIN tb_subservice_cat tsc2 on id_subservice_cat = id_user_subservice_cat";
         
         Connection cnn = null;
         PreparedStatement ps = null;
