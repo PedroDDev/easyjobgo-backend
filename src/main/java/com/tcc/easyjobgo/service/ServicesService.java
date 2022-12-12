@@ -182,10 +182,9 @@ public class ServicesService implements IServicesRepository{
 
     @Override
     public Services save(Services service) {
-        String query = "insert into TB_SERVICES (INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE,EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE," +
-                       "CONFIRMATION_WORKER_SERVICE,START_DATE_SERVICE,END_DATE_SERVICE,END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE," +
-                       "ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER) " + 
-                       "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "insert into TB_SERVICES (INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE,EXPIRES_DATE_SERVICE," +
+                       "ID_SERVICE_CLIENT,ID_SERVICE_WORKER) " + 
+                       "values (?,?,?,?,?,?,?,?)";
         
         Connection cnn = null;
         PreparedStatement ps = null;
@@ -201,17 +200,8 @@ public class ServicesService implements IServicesRepository{
             ps.setObject(4, service.getValue());
             ps.setTimestamp(5, service.getCreateDate());
             ps.setTimestamp(6, service.getExpiresDate());
-            ps.setBoolean(7, service.isConfirmationClient());
-            ps.setBoolean(8, service.isConfirmationWorker());
-            ps.setTimestamp(9, service.getStartDate());
-            ps.setTimestamp(10, service.getEndDate());
-            ps.setString(11, service.getEndToken());
-            ps.setBoolean(12, service.isEndConfirmationClient());
-            ps.setBoolean(13, service.isEndConfirmationWorker());
-            ps.setInt(14, service.getDayServiceWorker());
-            ps.setObject(15, service.getServiceClient());
-            ps.setObject(16, service.getServiceWorker());
-
+            ps.setObject(7, service.getServiceClient());
+            ps.setObject(8, service.getServiceWorker());
 
             int affectedRows = ps.executeUpdate();
 
