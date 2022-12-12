@@ -88,9 +88,8 @@ public class UserController {
         return new ResponseEntity<List<User>>(HttpStatus.NOT_FOUND);
     }
 
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(path="/workers/search/{username}/{description}")
+    @GetMapping(path="/workers/search/{description}/{username}")
     public ResponseEntity<List<User>> getByDesc(@PathVariable("username") String username, @PathVariable("description") String description) {
         List<User> result = userRepository.findByDesc(username, description);
         if(result.size() > 0) return new ResponseEntity<List<User>>(result, HttpStatus.OK);

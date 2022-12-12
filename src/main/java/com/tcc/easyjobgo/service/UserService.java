@@ -147,7 +147,6 @@ public class UserService implements IUserRepository{
 
     }
 
-
     @Override
     public List<User> findByDesc(String username, String desc) {
         String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
@@ -155,8 +154,8 @@ public class UserService implements IUserRepository{
                         " address_pubplace_user, address_comp_user, city_user, fu_user, regdate_user, " +
                         "rating_user, provservice_user, service_desc_user, service_value_user, id_user_service_cat, " +
                         "id_user_subservice_cat, id_user_status, id_user_role, desc_subservice_cat FROM tb_user tu " +
-                        "INNER JOIN tb_service_cat tsc ON tsc.id_service_cat = id_user_service_cat" +
-                        "INNER JOIN  tb_subservice_cat tsc2 ON id_subservice_service_cat = tsc.id_service_cat "+
+                        "INNER JOIN tb_service_cat tsc ON id_service_cat = id_user_service_cat " +
+                        "INNER JOIN  tb_subservice_cat tsc2 ON id_subservice_cat = id_user_subservice_cat "+
                         "WHERE id_user_role = '2' AND id_user_status = '1' AND  email_user <> ? AND provservice_user = true AND"+
                         "(desc_service_cat ILIKE '%"+desc+"%' OR desc_subservice_cat ILIKE '%"+desc+"%' OR service_desc_user ILIKE '%"+desc+"%')";
         
