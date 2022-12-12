@@ -246,4 +246,16 @@ public class ServicesService implements IServicesRepository{
     public List<Services> findAllByUser() {
         return null;
     }
+
+    @Override
+    public Services updateWorkerStatus(Services service) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Services updateStartDate(Services service) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

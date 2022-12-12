@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcc.easyjobgo.factory.TokenFactory;
 import com.tcc.easyjobgo.factory.UserFactory;
@@ -110,21 +113,6 @@ public class UserController {
             User cpfExists = userRepository.findByCpf(responseUser.getCpf());
             if(cpfExists != null) return new ResponseEntity<String>("Cpf já está cadastrado no Sistema!", HttpStatus.CONFLICT);
 
-            // if(!profileImg.isEmpty()){
-            //     File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
-            //     FileOutputStream os = new FileOutputStream(requestFile);
-            //     os.write(profileImg.getBytes());
-            //     os.close();
-
-            //     String fileName = responseUser.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
-
-            //     s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
-                
-            //     requestFile.delete();
-                
-            //     responseUser.setProfileImg(IMAGE_BASE_URL+fileName);
-            // }
- 
             savedUser = userRepository.saveUser(responseUser);
 
             if(savedUser.isProvideService()){
@@ -155,7 +143,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value="/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<User> updateUser(@RequestParam("user") String user){
         try {
             ObjectMapper om = new ObjectMapper();
@@ -170,26 +158,38 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
+    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {"image/jpg", "image/jpeg", "image/png", "image/bmp"})
+    public ResponseEntity<byte[]> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
         try {
             User userExists = userRepository.findById(id);
-        
-            if(userExists != null && !profileImg.isEmpty()) {
+            if(userExists != null){
+                if(!profileImg.isEmpty()){
+                    File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+                    FileOutputStream os = new FileOutputStream(requestFile);
+                    os.write(profileImg.getBytes());
+                    os.close();
 
-                File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
-                FileOutputStream os = new FileOutputStream(requestFile);
-                os.write(profileImg.getBytes());
-                os.close();
+                    String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+                    
+                    s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
+                    
+                    requestFile.delete();
+                    
+                    userRepository.updateUserProfileImage(fileName, id);
 
-                String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
-                userRepository.updateUserProfileImage(fileName, id);
+                    S3Object file = s3Client.getObject(bucketName, fileName);
 
-                return new ResponseEntity<String>("imagem de perfil atualizada", HttpStatus.OK);
+                    if(file != null){
+                        S3ObjectInputStream fileContent = file.getObjectContent();
+                        byte[] fileBytes = IOUtils.toByteArray(fileContent);
+
+                        return new ResponseEntity<byte[]>(fileBytes, HttpStatus.OK);
+                    }
+                }
             }
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

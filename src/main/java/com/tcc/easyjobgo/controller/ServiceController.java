@@ -86,7 +86,7 @@ public class ServiceController {
             emailSenderService.send(client.getUsername(), "Service Order Confirmed", new BuildEmailMessage().clientServiceCreateEmail(client.getFirstName(), worker.getFirstName()));
             emailSenderService.send(worker.getUsername(), "Service Order Confirmed", new BuildEmailMessage().workerServiceCreateEmail(client.getFirstName(), worker.getFirstName()));
 
-            workerDayRepository.updateStatus(service.getDayServiceWorker(), 3);
+            // workerDayRepository.updateStatus(service.getDayServiceWorker(), 3);
 
         } catch (Exception e) {
             

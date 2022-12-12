@@ -18,6 +18,8 @@ public interface IServicesRepository {
     Services findByToken(String token);
 
     Services update(Services service);
+    Services updateWorkerStatus(Services service);
+    Services updateStartDate(Services service);
 
     Services save(Services service);
 
