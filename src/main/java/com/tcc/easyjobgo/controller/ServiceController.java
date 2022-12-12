@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,21 +42,20 @@ public class ServiceController {
     EmailService emailSenderService;
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(path="/worker/{workerid}")
-    public ResponseEntity<List<Services>> getWorkerServices(@PathVariable("workerid") UUID workerId) {
+    @GetMapping(value="/worker", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<List<Services>> getWorkerServices(@RequestParam("worker") UUID workerId) {
         List<Services> result = serviceRepository.findAllByWorker(workerId);
         if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
         return new ResponseEntity<List<Services>>(HttpStatus.NOT_FOUND);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(path="/client/{clientid}")
-    public ResponseEntity<List<Services>> getClientServices(@PathVariable("workerid") UUID clientId) {
+    @GetMapping(value="/client", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<List<Services>> getClientServices(@RequestParam("client") UUID clientId) {
         List<Services> result = serviceRepository.findAllByClient(clientId);
         if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
         return new ResponseEntity<List<Services>>(HttpStatus.NOT_FOUND);
     }
-
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
