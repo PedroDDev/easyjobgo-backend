@@ -2,13 +2,16 @@ package com.tcc.easyjobgo.controller;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcc.easyjobgo.factory.ServiceFactory;
 import com.tcc.easyjobgo.factory.UserFactory;
 import com.tcc.easyjobgo.factory.WorkerDayFactory;
@@ -39,20 +43,40 @@ public class ServiceController {
     EmailService emailSenderService;
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PostMapping(value="/registration", consumes = {"application/json"})
-    public ResponseEntity<String> saveService(@RequestBody Services service){
+    @GetMapping(path="/worker/{workerid}")
+    public ResponseEntity<List<Services>> getWorkerServices(@PathVariable("workerid") UUID workerId) {
+        List<Services> result = serviceRepository.findAllByWorker(workerId);
+        if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<Services>>(HttpStatus.NOT_FOUND);
+    }
 
-        Services savedService = service;
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @GetMapping(path="/client/{clientid}")
+    public ResponseEntity<List<Services>> getClientServices(@PathVariable("workerid") UUID clientId) {
+        List<Services> result = serviceRepository.findAllByClient(clientId);
+        if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<Services>>(HttpStatus.NOT_FOUND);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> saveService(@RequestParam("service") String service){
+
+        Services savedService = null;
 
         User client = null;
         User worker = null;
         
         try {
 
-            savedService.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
-            savedService.setExpiresDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)));
+            ObjectMapper om = new ObjectMapper();
+            Services responseService = om.readValue(service, Services.class);
 
-            savedService = serviceRepository.save(service);
+            responseService.setCreateDate(Timestamp.valueOf(LocalDateTime.now()));
+            responseService.setExpiresDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)));
+
+            savedService = serviceRepository.save(responseService);
 
             client = userRepository.findById(savedService.getServiceClient());
             worker = userRepository.findById(savedService.getServiceWorker());
