@@ -42,7 +42,7 @@ public class ServiceController {
     EmailService emailSenderService;
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(value="/worker", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value="/worker", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<List<Services>> getWorkerServices(@RequestParam("worker") UUID workerId) {
         List<Services> result = serviceRepository.findAllByWorker(workerId);
         if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
@@ -50,7 +50,7 @@ public class ServiceController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @GetMapping(value="/client", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value="/client", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<List<Services>> getClientServices(@RequestParam("client") UUID clientId) {
         List<Services> result = serviceRepository.findAllByClient(clientId);
         if(result.size() > 0) return new ResponseEntity<List<Services>>(result, HttpStatus.OK);
