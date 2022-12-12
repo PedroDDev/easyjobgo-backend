@@ -12,6 +12,7 @@ public interface IUserRepository {
  
     List<User> findAll();
     List<User> findAllWorkers(String username);
+    List<User> findAllWorkersByService(Integer serviceCat, String username);
     User findByUsername(String username);
     User findByCpf(String cpf);
     User findById(UUID id);

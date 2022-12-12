@@ -103,6 +103,52 @@ public class UserService implements IUserRepository{
     }
     
     @Override
+    public List<User> findAllWorkersByService(Integer serviceCat, String username) {
+        String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
+                       " numberddd_user, number_user, birthdate_user, postal_code_user, address_district_user, " +
+                       " address_pubplace_user, address_comp_user, city_user, fu_user, regdate_user, " +
+                       " rating_user, provservice_user, service_desc_user, service_value_user, id_user_service_cat, " +
+                       " id_user_subservice_cat, id_user_status, id_user_role, desc_subservice_cat FROM tb_user tu " +
+                       " LEFT JOIN tb_subservice_cat tsc2 on id_subservice_cat = id_user_subservice_cat " +
+                       " WHERE id_user_role = '2' AND id_user_status = '1' AND email_user <> ? AND provservice_user = true AND id_user_service_cat =?";
+        
+        Connection cnn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<User> users = new ArrayList<User>();
+        try {
+            cnn = DBConfig.startConnection();
+            ps = cnn.prepareStatement(query);
+
+            ps.setString(1, username);
+            ps.setInt(2, serviceCat);
+
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                users.add(new User((UUID)rs.getObject(1),rs.getString(2), rs.getString(3), rs.getString(4), 
+                                   rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
+                                   rs.getDate(10), rs.getString(11), rs.getString(12), rs.getString(13),
+                                   rs.getObject(14), rs.getString(15), rs.getString(16), rs.getDate(17), rs.getObject(18),
+                                   rs.getBoolean(19),rs.getString(20), rs.getObject(21), rs.getObject(22), 
+                                   rs.getObject(23), rs.getInt(24), rs.getInt(25), rs.getString(26)));
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            throw new DBException(e.getMessage(), e.getCause());
+        } finally{
+            DBConfig.closeConnection(cnn);
+            DBConfig.closePreparedStatment(ps);
+            DBConfig.closeResultSet(rs);
+        }
+
+    }
+
+
+    @Override
     public List<User> findByDesc(String username, String desc) {
         String query = " SELECT id_user, profile_img_user, cpf_user, first_name_user, last_name_user, email_user, password_user, " +
                         "numberddd_user, number_user, birthdate_user, postal_code_user, address_district_user, " +
