@@ -23,16 +23,19 @@ public class Services {
     private Integer dayServiceWorker;
     private UUID serviceClient;
     private UUID serviceWorker;
-    private String firstNameUser;
-    private String lastNameUser;
+    private String firstNameClient;
+    private String lastNameClient;
+    private String firstNameWorker;
+    private String lastNameWorker;
     
     public Services(){
         
     }
     public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
-            Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, Timestamp endDate,
-            String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, Integer dayServiceWorker,
-            UUID serviceClient, UUID serviceWorker, String firstNameUser, String lastNameUser) {
+            Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, 
+            Timestamp endDate, String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, 
+            Integer dayServiceWorker, UUID serviceClient, UUID serviceWorker, String firstNameClient, 
+            String lastNameClient, String firstNameWorker, String lastNameWorker) {
         
         this.id = id;
         this.initalHour = initalHour;
@@ -50,8 +53,10 @@ public class Services {
         this.dayServiceWorker = dayServiceWorker;
         this.serviceClient = serviceClient;
         this.serviceWorker = serviceWorker;
-        this.firstNameUser = firstNameUser;
-        this.lastNameUser = lastNameUser; 
+        this.firstNameClient = firstNameClient;
+        this.lastNameClient = lastNameClient;
+        this.firstNameWorker = firstNameWorker;
+        this.lastNameWorker = lastNameWorker;
 
     }
 
@@ -170,18 +175,32 @@ public class Services {
     public void setServiceWorker(UUID serviceWorker) {
         this.serviceWorker = serviceWorker;
     }
-    public String getFirstNameUser() {
-        return firstNameUser;
+    public String getFirstNameClient() {
+        return firstNameClient;
     }
-    public void setFirstNameUser(String firstNameUser) {
-        this.firstNameUser = firstNameUser;
+    public void setFirstNameClient(String firstNameClient) {
+        this.firstNameClient = firstNameClient;
     }
-    public String getLastNameUser() {
-        return lastNameUser;
+    public String getLastNameClient() {
+        return lastNameClient;
     }
-    public void setLastNameUser(String lastNameUser) {
-        this.lastNameUser = lastNameUser;
+    public void setLastNameClient(String lastNameClient) {
+        this.lastNameClient = lastNameClient;
     }
+    public String getFirstNameWorker() {
+        return firstNameWorker;
+    }
+    public void setFirstNameWorker(String firstNameWorker) {
+        this.firstNameWorker = firstNameWorker;
+    }
+    public String getLastNameWorker() {
+        return lastNameWorker;
+    }
+    public void setLastNameWorker(String lastNameWorker) {
+        this.lastNameWorker = lastNameWorker;
+    }
+ 
+    
 
     
 }
