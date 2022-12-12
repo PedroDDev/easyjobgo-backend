@@ -1,13 +1,14 @@
 package com.tcc.easyjobgo.model;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 public class Services {
     
     private UUID id;
-    private Timestamp initalHour;
-    private Timestamp finalHour;
+    private Time initalHour;
+    private Time finalHour;
     private String description;
     private Object value;
     private Timestamp createDate;
@@ -26,7 +27,7 @@ public class Services {
     public Services(){
         
     }
-    public Services(UUID id, Timestamp initalHour, Timestamp finalHour, String description, Object value, Timestamp createDate,
+    public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
             Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, Timestamp endDate,
             String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, Integer dayServiceWorker,
             UUID serviceClient, UUID serviceWorker) {
@@ -53,17 +54,17 @@ public class Services {
         return id;
     }
 
-    public Timestamp getInitalHour() {
+    public Time getInitalHour() {
         return initalHour;
     }
-    public void setInitalHour(Timestamp initalHour) {
+    public void setInitalHour(Time initalHour) {
         this.initalHour = initalHour;
     }
     
-    public Timestamp getFinalHour() {
+    public Time getFinalHour() {
         return finalHour;
     }
-    public void setFinalHour(Timestamp finalHour) {
+    public void setFinalHour(Time finalHour) {
         this.finalHour = finalHour;
     }
     
