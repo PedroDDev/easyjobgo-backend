@@ -75,10 +75,10 @@ public class ServicesService implements IServicesRepository{
             rs = ps.executeQuery();
 
             while(rs.next()){
-                service.add(new Services((UUID)rs.getObject(1), rs.getTime(1), rs.getTime(1), rs.getString(1), rs.getObject(1),
-                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
-                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
-                                         rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+                service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
+                                         rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
+                                         rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
+                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17)));
             }
 
             return service;
@@ -114,10 +114,10 @@ public class ServicesService implements IServicesRepository{
             rs = ps.executeQuery();
 
             while(rs.next()){
-                service.add(new Services((UUID)rs.getObject(1), rs.getTime(1), rs.getTime(1), rs.getString(1), rs.getObject(1),
-                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
-                                         rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
-                                         rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1)));
+                service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
+                                         rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
+                                         rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
+                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17)));
             }
 
             return service;
