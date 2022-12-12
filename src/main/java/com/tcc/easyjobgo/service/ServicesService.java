@@ -16,7 +16,8 @@ import com.tcc.easyjobgo.repository.IServicesRepository;
 public class ServicesService implements IServicesRepository{
 
     @Override
-    public List<Services> findAll() {
+    public List<Services> findAll() 
+    {
         return null;
     }
 
@@ -54,11 +55,13 @@ public class ServicesService implements IServicesRepository{
     }
 
     @Override
-    public List<Services> findAllByClient(UUID serviceClient) {
+    public List<Services> findAllByClient(UUID serviceClient) 
+    {
         String query = "SELECT ID_SERVICE, INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE," +
                                "EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE," +
-                               "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER" +
-                        " FROM tb_services ts2 WHERE id_service_client = ? ";
+                               "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER, first_name_user, last_name_user" +
+                        "INNER JOIN tb_user tu ON id_service_client = id_user" + 
+                        "FROM tb_services ts2 WHERE id_service_client = ? ";
         
         Connection cnn = null;
         PreparedStatement ps = null;
@@ -78,7 +81,8 @@ public class ServicesService implements IServicesRepository{
                 service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
                                          rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
                                          rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17)));
+                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17),
+                                         rs.getString(18), rs.getString(19)));
             }
 
             return service;
@@ -96,8 +100,9 @@ public class ServicesService implements IServicesRepository{
     public List<Services> findAllByWorker(UUID serviceWorker) {
         String query = "SELECT ID_SERVICE, INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE," +
                         "EXPIRES_DATE_SERVICE,CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE," +
-                        "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER" +
-                        " FROM tb_services ts2 WHERE ID_SERVICE_WORKER = ? ";
+                        "END_TOKEN_SERVICE,END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER, first_name_user, last_name_user" +
+                        "INNER JOIN tb_user tu ON ID_SERVICE_WORKER = id_user" + 
+                        "FROM tb_services ts2 WHERE ID_SERVICE_WORKER = ? ";
         
         Connection cnn = null;
         PreparedStatement ps = null;
@@ -117,7 +122,8 @@ public class ServicesService implements IServicesRepository{
                 service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
                                          rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
                                          rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17)));
+                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17), 
+                                         rs.getString(18), rs.getString(19)));
             }
 
             return service;
@@ -158,10 +164,11 @@ public class ServicesService implements IServicesRepository{
             rs = ps.executeQuery();
 
             while(rs.next()){
-                service = new Services((UUID)rs.getObject(1), rs.getTime(1), rs.getTime(1), rs.getString(1), rs.getObject(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getBoolean(1), rs.getBoolean(1),
-                                        rs.getTimestamp(1), rs.getTimestamp(1), rs.getString(1), rs.getBoolean(1),
-                                        rs.getBoolean(1), rs.getInt(1), (UUID)rs.getObject(1), (UUID)rs.getObject(1));
+                service = new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
+                                        rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
+                                        rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
+                                        rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17),
+                                        rs.getString(18), rs.getString(19));
             }
 
             return service;
@@ -212,7 +219,8 @@ public class ServicesService implements IServicesRepository{
                     return new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
                                        rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
                                        rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                       rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17));
+                                       rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17),
+                                       rs.getString(18), rs.getString(19));
                 }
             }
 

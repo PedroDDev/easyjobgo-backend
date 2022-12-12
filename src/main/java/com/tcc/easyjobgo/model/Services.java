@@ -23,6 +23,8 @@ public class Services {
     private Integer dayServiceWorker;
     private UUID serviceClient;
     private UUID serviceWorker;
+    private String firstNameUser;
+    private String lastNameUser;
     
     public Services(){
         
@@ -30,7 +32,7 @@ public class Services {
     public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
             Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, Timestamp endDate,
             String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, Integer dayServiceWorker,
-            UUID serviceClient, UUID serviceWorker) {
+            UUID serviceClient, UUID serviceWorker, String firstNameUser, String lastNameUser) {
         
         this.id = id;
         this.initalHour = initalHour;
@@ -48,6 +50,9 @@ public class Services {
         this.dayServiceWorker = dayServiceWorker;
         this.serviceClient = serviceClient;
         this.serviceWorker = serviceWorker;
+        this.firstNameUser = firstNameUser;
+        this.lastNameUser = lastNameUser; 
+
     }
 
     public UUID getId() {
@@ -165,4 +170,18 @@ public class Services {
     public void setServiceWorker(UUID serviceWorker) {
         this.serviceWorker = serviceWorker;
     }
+    public String getFirstNameUser() {
+        return firstNameUser;
+    }
+    public void setFirstNameUser(String firstNameUser) {
+        this.firstNameUser = firstNameUser;
+    }
+    public String getLastNameUser() {
+        return lastNameUser;
+    }
+    public void setLastNameUser(String lastNameUser) {
+        this.lastNameUser = lastNameUser;
+    }
+
+    
 }
