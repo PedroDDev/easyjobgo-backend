@@ -76,4 +76,10 @@ days:
 ]
 
 
+Para atualizar a imagem de perfil de um usuario (PUT):
+https://easyjobgoapp.herokuapp.com/easyjobgo/v1/user/image/alteration
+
+file: (imagem de perfil): faz o upload da imagem direto,
+id: id do usuario
+
 
