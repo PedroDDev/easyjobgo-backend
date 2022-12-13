@@ -61,7 +61,7 @@ public class ServicesService implements IServicesRepository{
                                 "CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE, END_TOKEN_SERVICE," +
                                 "END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER,first_name_user, last_name_user, profile_img_user," +
                                 "(SELECT tu1.first_name_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_worker ) AS fist_name_worker, " +
-                                "(SELECT tu1.last_name_user FROM tb_user tu1  WHERE tu1.id_user = ts2.id_service_worker ) AS last_name_worker " +
+                                "(SELECT tu1.last_name_user FROM tb_user tu1  WHERE tu1.id_user = ts2.id_service_worker ) AS last_name_worker, " +
                                 "(SELECT tu1.profile_img_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_worker ) AS worker_profile," +
                                 "FROM tb_services ts2 INNER JOIN tb_user tu ON id_service_client = id_user WHERE id_service_client = ? ";
         
