@@ -59,7 +59,7 @@ public class ServicesService implements IServicesRepository{
     {
         String query = "SELECT ID_SERVICE, INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE, EXPIRES_DATE_SERVICE," +
                                 "CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE, END_TOKEN_SERVICE," +
-                                "END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER,first_name_user, last_name_user, profile_img_user," +
+                                "END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_SERVICE_CLIENT,ID_SERVICE_WORKER,first_name_user, last_name_user, profile_img_user," +
                                 "(SELECT tu1.first_name_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_worker ) AS fist_name_worker, " +
                                 "(SELECT tu1.last_name_user FROM tb_user tu1  WHERE tu1.id_user = ts2.id_service_worker ) AS last_name_worker, " +
                                 "(SELECT tu1.profile_img_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_worker ) AS worker_profile " +
@@ -83,8 +83,8 @@ public class ServicesService implements IServicesRepository{
                 service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
                 rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
                 rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17), 
-                rs.getString(18), rs.getString(19), rs.getString(20), rs.getString(21), rs.getString(22), rs.getString(23)));
+                rs.getBoolean(14), (UUID)rs.getObject(15), (UUID)rs.getObject(16), 
+                rs.getString(17), rs.getString(18), rs.getString(19), rs.getString(20), rs.getString(21), rs.getString(22)));
             }
 
             return service;
@@ -102,7 +102,7 @@ public class ServicesService implements IServicesRepository{
     public List<Services> findAllByWorker(UUID serviceWorker) {
         String query = "SELECT ID_SERVICE, INIT_HOUR_SERVICE,FINAL_HOUR_SERVICE,DESC_SERVICE,VALUE_SERVICE,CREATE_DATE_SERVICE, EXPIRES_DATE_SERVICE," +
                         "CONFIRMATION_CLIENT_SERVICE,CONFIRMATION_WORKER_SERVICE, START_DATE_SERVICE, END_DATE_SERVICE, END_TOKEN_SERVICE," +
-                        "END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_DAY_SERVICE_WORKER,ID_SERVICE_CLIENT,ID_SERVICE_WORKER," +
+                        "END_CONF_CLIENT_SERVICE,END_CONF_WORKER_SERVICE,ID_SERVICE_CLIENT,ID_SERVICE_WORKER," +
                         "(SELECT tu1.first_name_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_client ) AS fist_name_client," +
                         "(SELECT tu1.last_name_user FROM tb_user tu1  WHERE tu1.id_user = ts2.id_service_client ) AS last_name_client," + 
                         "(SELECT tu1.profile_img_user FROM tb_user tu1 WHERE tu1.id_user = ts2.id_service_client ) AS client_profile," +
@@ -125,10 +125,10 @@ public class ServicesService implements IServicesRepository{
 
             while(rs.next()){
                 service.add(new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
-                                         rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
-                                         rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                         rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17), 
-                                         rs.getString(18), rs.getString(19), rs.getString(20), rs.getString(21), rs.getString(22), rs.getString(23)));
+                rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
+                rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
+                rs.getBoolean(14), (UUID)rs.getObject(15), (UUID)rs.getObject(16), 
+                rs.getString(17), rs.getString(18), rs.getString(19), rs.getString(20), rs.getString(21), rs.getString(22)));
             }
 
             return service;
@@ -170,9 +170,10 @@ public class ServicesService implements IServicesRepository{
 
             while(rs.next()){
                 service = new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
-                                        rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
-                                        rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                        rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17));
+                rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
+                rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
+                rs.getBoolean(14), (UUID)rs.getObject(15), (UUID)rs.getObject(16), 
+                rs.getString(17), rs.getString(18), rs.getString(19), rs.getString(20), rs.getString(21), rs.getString(22));
             }
 
             return service;
@@ -223,7 +224,7 @@ public class ServicesService implements IServicesRepository{
                     return new Services((UUID)rs.getObject(1), rs.getTime(2), rs.getTime(3), rs.getString(4), rs.getObject(5),
                                        rs.getTimestamp(6), rs.getTimestamp(7), rs.getBoolean(8), rs.getBoolean(9),
                                        rs.getTimestamp(10), rs.getTimestamp(11), rs.getString(12), rs.getBoolean(13),
-                                       rs.getBoolean(14), rs.getInt(15), (UUID)rs.getObject(16), (UUID)rs.getObject(17));
+                                       rs.getBoolean(14), (UUID)rs.getObject(15), (UUID)rs.getObject(16));
                 }
             }
 

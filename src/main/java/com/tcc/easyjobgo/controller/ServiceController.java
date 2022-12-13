@@ -204,7 +204,7 @@ public class ServiceController {
             Services serviceExists = serviceRepository.findByToken(token);
             if(serviceExists == null) return new ResponseEntity<String>("Token Não Existente. Por favor, tente novamente!", HttpStatus.NOT_FOUND);
 
-            workerDayRepository.updateStatus(serviceExists.getDayServiceWorker(), 1);
+            // workerDayRepository.updateStatus(serviceExists.getDayServiceWorker(), 1);
 
         } catch (Exception e) {
             

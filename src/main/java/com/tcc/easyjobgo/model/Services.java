@@ -20,7 +20,6 @@ public class Services {
     private String endToken;
     private boolean endConfirmationClient;
     private boolean endConfirmationWorker;
-    private Integer dayServiceWorker;
     private UUID serviceClient;
     private UUID serviceWorker;
 
@@ -37,7 +36,7 @@ public class Services {
     public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
             Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, 
             Timestamp endDate, String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, 
-            Integer dayServiceWorker, UUID serviceClient, UUID serviceWorker, String firstNameClient, 
+            UUID serviceClient, UUID serviceWorker, String firstNameClient, 
             String lastNameClient, String profileClient, String firstNameWorker, String lastNameWorker, String workerProfile) {
         
         this.id = id;
@@ -53,7 +52,6 @@ public class Services {
         this.endToken = endToken;
         this.endConfirmationClient = endConfirmationClient;
         this.endConfirmationWorker = endConfirmationWorker;
-        this.dayServiceWorker = dayServiceWorker;
         this.serviceClient = serviceClient;
         this.serviceWorker = serviceWorker;
         this.firstNameClient = firstNameClient;
@@ -68,7 +66,7 @@ public class Services {
     public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
                     Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, 
                     Timestamp endDate, String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, 
-                    Integer dayServiceWorker, UUID serviceClient, UUID serviceWorker) {
+                    UUID serviceClient, UUID serviceWorker) {
 
                 this.id = id;
                 this.initalHour = initalHour;
@@ -83,7 +81,6 @@ public class Services {
                 this.endToken = endToken;
                 this.endConfirmationClient = endConfirmationClient;
                 this.endConfirmationWorker = endConfirmationWorker;
-                this.dayServiceWorker = dayServiceWorker;
                 this.serviceClient = serviceClient;
                 this.serviceWorker = serviceWorker;
                 this.firstNameClient = null;
@@ -187,13 +184,6 @@ public class Services {
     }
     public void setEndConfirmationWorker(boolean endConfirmationWorker) {
         this.endConfirmationWorker = endConfirmationWorker;
-    }
-    
-    public Integer getDayServiceWorker() {
-        return dayServiceWorker;
-    }
-    public void setDayServiceWorker(Integer dayServiceWorker) {
-        this.dayServiceWorker = dayServiceWorker;
     }
     
     public UUID getServiceClient() {
