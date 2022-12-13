@@ -22,6 +22,7 @@ import com.tcc.easyjobgo.util.email.EmailService;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -168,17 +168,20 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PostMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
+    public ResponseEntity<String> updateUserProfile(@RequestParam("file") String profileImg, @RequestParam("id") UUID id){
         try {
             User userExists = userRepository.findById(id);
             if(userExists != null){
-                if(!profileImg.isEmpty()){
-                    File requestFile = new File(IMG_PATH+profileImg.getOriginalFilename());
+                if(profileImg != null){
+                    
+                    byte[] requestFileBase64 = Base64.getDecoder().decode(profileImg);
+
+                    File requestFile = new File(IMG_PATH+"file.jpeg");
                     FileOutputStream os = new FileOutputStream(requestFile);
-                    os.write(profileImg.getBytes());
+                    os.write(requestFileBase64);
                     os.close();
 
-                    String fileName = userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+                    String fileName = userExists.getCpf()+"_perfil.jpeg";
                     
                     s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
                     
