@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class UserController {
 
     private static final String IMG_PATH = System.getProperty("user.dir")+File.separator;
     private static final String CONFIRMATION_LINK = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/registration/confirm?token=";
-    private static final String IMAGE_BASE_URL = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/file/read?file=";
+    // private static final String IMAGE_BASE_URL = "https://easyjobgoapp.herokuapp.com/easyjobgo/v1/file/read?file=";
 
     @Autowired
     AmazonS3 s3Client;
@@ -166,8 +167,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {"image/jpg", "image/jpeg", "image/png", "image/bmp"})
-    public ResponseEntity<byte[]> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
+    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
         try {
             User userExists = userRepository.findById(id);
             if(userExists != null){
@@ -177,27 +178,27 @@ public class UserController {
                     os.write(profileImg.getBytes());
                     os.close();
 
-                    String fileName = IMAGE_BASE_URL+userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
+                    String fileName = userExists.getCpf()+"_perfil_"+profileImg.getOriginalFilename();
                     
                     s3Client.putObject(new PutObjectRequest(bucketName, fileName, requestFile));
                     
                     requestFile.delete();
-                    
-                    userRepository.updateUserProfileImage(fileName, id);
 
                     S3Object file = s3Client.getObject(bucketName, fileName);
 
                     if(file != null){
                         S3ObjectInputStream fileContent = file.getObjectContent();
                         byte[] fileBytes = IOUtils.toByteArray(fileContent);
+                        String fileBase64 = Base64.getEncoder().encodeToString(fileBytes);
+                        userRepository.updateUserProfileImage(fileBase64, id);
 
-                        return new ResponseEntity<byte[]>(fileBytes, HttpStatus.OK);
+                        return new ResponseEntity<String>(Base64.getEncoder().encodeToString(fileBytes), HttpStatus.OK);
                     }
                 }
             }
-            return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("Error ao salvar imagem!", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
