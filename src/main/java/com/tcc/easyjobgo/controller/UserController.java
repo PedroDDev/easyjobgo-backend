@@ -12,7 +12,6 @@ import com.tcc.easyjobgo.factory.TokenFactory;
 import com.tcc.easyjobgo.factory.UserFactory;
 import com.tcc.easyjobgo.factory.WorkerDayFactory;
 import com.tcc.easyjobgo.model.User;
-import com.tcc.easyjobgo.model.WorkerDay;
 import com.tcc.easyjobgo.repository.ITokenRepository;
 import com.tcc.easyjobgo.repository.IUserRepository;
 import com.tcc.easyjobgo.repository.IWorkerDayRepository;
@@ -23,7 +22,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -104,7 +102,7 @@ public class UserController {
     }
 
     @PostMapping(value="/registration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> saveUser(@RequestParam("user") String user, @RequestParam("days") String days){
+    public ResponseEntity<String> saveUser(@RequestParam("user") String user){
 
         com.tcc.easyjobgo.model.Token confirmationToken = null;
         User savedUser = null;
@@ -112,7 +110,7 @@ public class UserController {
         try {
             ObjectMapper om = new ObjectMapper();
             User responseUser = om.readValue(user, User.class);
-            List<WorkerDay> responseDays = Arrays.asList(om.readValue(days, WorkerDay[].class));
+            // List<WorkerDay> responseDays = Arrays.asList(om.readValue(days, WorkerDay[].class));
 
             User usernameExists = userRepository.findByUsername(responseUser.getUsername());
             if(usernameExists != null) return new ResponseEntity<String>("Email já está cadastrado no Sistema!", HttpStatus.CONFLICT);
@@ -122,15 +120,15 @@ public class UserController {
 
             savedUser = userRepository.saveUser(responseUser);
 
-            if(savedUser.isProvideService()){
-                if(days != null){
-                    for (WorkerDay day : responseDays) {
+            // if(savedUser.isProvideService()){
+            //     if(days != null){
+            //         for (WorkerDay day : responseDays) {
                         
-                        day.setWorkerId(savedUser.getId());
-                        workerDayRepository.save(day);
-                    }
-                }
-            }
+            //             day.setWorkerId(savedUser.getId());
+            //             workerDayRepository.save(day);
+            //         }
+            //     }
+            // }
 
             String token = UUID.randomUUID().toString();
             confirmationToken = new com.tcc.easyjobgo.model.Token(token, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusMinutes(15)), savedUser.getId());
