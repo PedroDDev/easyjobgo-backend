@@ -23,10 +23,13 @@ public class Services {
     private Integer dayServiceWorker;
     private UUID serviceClient;
     private UUID serviceWorker;
+
     private String firstNameClient;
     private String lastNameClient;
+    private String profileClient;
     private String firstNameWorker;
     private String lastNameWorker;
+    private String workerProfile;
     
     public Services(){
         
@@ -35,7 +38,7 @@ public class Services {
             Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, 
             Timestamp endDate, String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, 
             Integer dayServiceWorker, UUID serviceClient, UUID serviceWorker, String firstNameClient, 
-            String lastNameClient, String firstNameWorker, String lastNameWorker) {
+            String lastNameClient, String profileClient, String firstNameWorker, String lastNameWorker, String workerProfile) {
         
         this.id = id;
         this.initalHour = initalHour;
@@ -55,8 +58,10 @@ public class Services {
         this.serviceWorker = serviceWorker;
         this.firstNameClient = firstNameClient;
         this.lastNameClient = lastNameClient;
+        this.profileClient = profileClient;
         this.firstNameWorker = firstNameWorker;
         this.lastNameWorker = lastNameWorker;
+        this.workerProfile = workerProfile;
 
     }
 
@@ -228,8 +233,20 @@ public class Services {
     public void setLastNameWorker(String lastNameWorker) {
         this.lastNameWorker = lastNameWorker;
     }
+    public String getProfileClient() {
+        return profileClient;
+    }
+    public void setProfileClient(String profileClient) {
+        this.profileClient = profileClient;
+    }
+    public String getWorkerProfile() {
+        return workerProfile;
+    }
+    public void setWorkerProfile(String workerProfile) {
+        this.workerProfile = workerProfile;
+    }
  
     
-
+    
     
 }
