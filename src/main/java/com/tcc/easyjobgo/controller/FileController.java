@@ -1,6 +1,7 @@
 package com.tcc.easyjobgo.controller;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,7 @@ public class FileController {
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @GetMapping(path="read", produces = {"image/jpg", "image/jpeg", "image/png", "image/bmp"})
-    public ResponseEntity<byte[]> readFile(@RequestParam("file") String fileName) throws IOException{
+    public ResponseEntity<String> readFile(@RequestParam("file") String fileName) throws IOException{
         
         try{
             S3Object file = s3Client.getObject(bucketName, fileName);
@@ -38,13 +39,13 @@ public class FileController {
                 S3ObjectInputStream fileContent = file.getObjectContent();
                 byte[] fileBytes = IOUtils.toByteArray(fileContent);
     
-                return new ResponseEntity<byte[]>(fileBytes, HttpStatus.OK);
+                return new ResponseEntity<String>(Base64.getEncoder().encodeToString(fileBytes), HttpStatus.OK);
             }else{
-                return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<String>("Imagem nao encontrada!",HttpStatus.NOT_FOUND);
             }
         }
         catch (Exception e){
-           return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+           return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
