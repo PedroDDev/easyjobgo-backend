@@ -60,6 +60,35 @@ public class Services {
 
     }
 
+    public Services(UUID id, Time initalHour, Time finalHour, String description, Object value, Timestamp createDate,
+                    Timestamp expiresDate, boolean confirmationClient, boolean confirmationWorker, Timestamp startDate, 
+                    Timestamp endDate, String endToken, boolean endConfirmationClient, boolean endConfirmationWorker, 
+                    Integer dayServiceWorker, UUID serviceClient, UUID serviceWorker) {
+
+                this.id = id;
+                this.initalHour = initalHour;
+                this.finalHour = finalHour;
+                this.description = description;
+                this.value = value;
+                this.createDate = createDate;
+                this.expiresDate = expiresDate;
+                this.confirmationClient = confirmationClient;
+                this.confirmationWorker = confirmationWorker;
+                this.endDate = endDate;
+                this.endToken = endToken;
+                this.endConfirmationClient = endConfirmationClient;
+                this.endConfirmationWorker = endConfirmationWorker;
+                this.dayServiceWorker = dayServiceWorker;
+                this.serviceClient = serviceClient;
+                this.serviceWorker = serviceWorker;
+                this.firstNameClient = null;
+                this.lastNameClient = null;
+                this.firstNameWorker = null;
+                this.lastNameWorker = null;
+
+    }
+
+
     public UUID getId() {
         return id;
     }
