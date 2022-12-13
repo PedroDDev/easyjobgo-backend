@@ -167,7 +167,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @PutMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value="/image/alteration", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> updateUserProfile(@RequestParam("file") MultipartFile profileImg, @RequestParam("id") UUID id){
         try {
             User userExists = userRepository.findById(id);
